@@ -1,6 +1,5 @@
 import express from "express";
 import {
-  bookmark,
   follow,
   getMyProfile,
   getOtherUserProfile,
@@ -8,6 +7,7 @@ import {
   logout,
   Register,
   unfollow,
+  getAllSavedBookmarks,
 } from "../controllers/userController.js";
 import isAuthenticated from "../config/auth.js";
 
@@ -21,7 +21,10 @@ router.route("/login").post(login);
 router.route("/logout").get(logout);
 
 // jo bhi update ka kaam hota hai waha put function use hoga
-router.route("/bookmark/:id").put(isAuthenticated, bookmark);
+
+router
+  .route("/getAllSavedBookmarks/:id")
+  .get(isAuthenticated, getAllSavedBookmarks);
 router.route("/profile/:id").get(isAuthenticated, getMyProfile);
 router.route("/otheruser/:id").get(isAuthenticated, getOtherUserProfile);
 router.route("/follow/:id").post(isAuthenticated, follow);

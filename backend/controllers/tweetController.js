@@ -72,6 +72,39 @@ export const likeOrDislike = async (req, res) => {
   }
 };
 
+// create a function for the bookmark
+export const bookmark = async (req, res) => {
+  try {
+    const loggedInUserId = req.body.id;
+    const tweetId = req.params.id;
+
+    const tweet = await Tweet.findById(tweetId);
+
+    if (!tweet) {
+      return res.status(404).json({ message: "Tweet not found" });
+    }
+
+    if (tweet.bookmarks.includes(loggedInUserId)) {
+      // Remove from bookmarks
+      await Tweet.findByIdAndUpdate(tweetId, {
+        $pull: { bookmarks: loggedInUserId },
+      });
+      return res.status(200).json({ message: "Removed from bookmarks" });
+    } else {
+      // Add to bookmarks
+      await Tweet.findByIdAndUpdate(tweetId, {
+        $push: { bookmarks: loggedInUserId },
+      });
+      return res.status(200).json({ message: "Saved to bookmarks", tweet });
+    }
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ message: "An error occurred", error: error.message });
+  }
+};
+
 // function for getting all the tweets
 // All Tweets == LoggedInUserTweet + Following user tweet
 export const getAllTweets = async (req, res) => {
@@ -91,6 +124,35 @@ export const getAllTweets = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const getTweetsByIds = async (req, res) => {
+  try {
+    const { ids } = req.body;
+
+    // Validate input
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({
+        message: "Invalid or empty tweet IDs array",
+        success: false,
+      });
+    }
+
+    // Fetch tweets
+    const tweets = await Tweet.find({ _id: { $in: ids } });
+
+    // Return the tweets
+    return res.status(200).json({
+      tweets,
+      success: true,
+    });
+  } catch (error) {
+    console.error("Error fetching tweets by IDs:", error);
+    return res.status(500).json({
+      message: "Internal Server Error",
+      success: false,
+    });
   }
 };
 

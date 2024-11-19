@@ -1,6 +1,7 @@
 import { User } from "../models/userSchema.js";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { Tweet } from "../models/tweetSchema.js";
 
 export const Register = async (req, res) => {
   try {
@@ -98,32 +99,72 @@ export const logout = (req, res) => {
 };
 
 // function for controller of the bookmarks
-export const bookmark = async (req, res) => {
+// export const bookmark = async (req, res) => {
+//   try {
+//     const loggedInUserId = req.body.id;
+//     const tweetId = req.params.id;
+
+//     const user = await User.findById(loggedInUserId);
+
+//     if (user.bookmarks.includes(tweetId)) {
+//       // save hai pehle se ab remove karn hai
+//       await User.findByIdAndUpdate(loggedInUserId, {
+//         $pull: { bookmarks: tweetId },
+//       });
+//       return res.status(200).json({
+//         message: "Remove from bookmarks",
+//       });
+//     } else {
+//       // bookmarks
+//       await User.findByIdAndUpdate(loggedInUserId, {
+//         $push: { bookmarks: tweetId },
+//       });
+//       return res.status(200).json({
+//         message: "Saved to bookmarks",
+//         user,
+//       });
+//     }
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+// function for getting all saved bookmarks
+export const getAllSavedBookmarks = async (req, res) => {
   try {
-    const loggedInUserId = req.body.id;
-    const tweetId = req.params.id;
+    const loggedInUserId = req.params.id; // Get the ID from the URL parameter
 
-    const user = await User.findById(loggedInUserId);
+    // Find the user by their ID and populate the bookmarked tweets data
+    const user = await User.findById(loggedInUserId).populate("bookmarks");
 
-    if (user.bookmarks.includes(tweetId)) {
-      // save hai pehle se ab remove karn hai
-      await User.findByIdAndUpdate(loggedInUserId, {
-        $pull: { bookmarks: tweetId },
-      });
-      return res.status(200).json({
-        message: "Remove from bookmarks",
-      });
-    } else {
-      // bookmarks
-      await User.findByIdAndUpdate(loggedInUserId, {
-        $push: { bookmarks: tweetId },
-      });
-      return res.status(200).json({
-        message: "Saved to bookmarks",
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+        success: false,
       });
     }
+
+    // Check if the user has any bookmarks
+    if (user.bookmarks.length === 0) {
+      return res.status(200).json({
+        message: "No bookmarks found",
+        success: true,
+        bookmarks: [],
+      });
+    }
+
+    // Return the user's bookmarks
+    return res.status(200).json({
+      message: "Bookmarks retrieved successfully",
+      success: true,
+      bookmarks: user.bookmarks,
+    });
   } catch (error) {
     console.log(error);
+    return res.status(500).json({
+      message: "Server error",
+      success: false,
+    });
   }
 };
 
