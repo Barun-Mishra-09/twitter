@@ -1,5 +1,5 @@
-export const USER_API_END_POINT = "http://localhost:8080/api/v1/user";
-export const TWEET_API_END_POINT = "http://localhost:8080/api/v1/tweet";
+export const USER_API_END_POINT = "https://twitter-2-y212.onrender.com";
+export const TWEET_API_END_POINT = "https://twitter-2-y212.onrender.com";
 
 // for showing the exact timing of the tweet
 export const timeSince = (timestamp) => {

@@ -4,8 +4,8 @@ const userSlice = createSlice({
   name: "user",
   initialState: {
     user: { following: [] },
-    otherUsers: null,
-    profile: null,
+    otherUsers: [],
+    profile: {},
   },
   reducers: {
     // multiple actions

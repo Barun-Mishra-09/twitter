@@ -15,7 +15,7 @@ databaseConnection();
 const app = express();
 
 // use the path of the file
-const _dirname = path.resolve();
+const __dirname = path.resolve();
 
 // middlewares using :- This is basic middleware in which it is required for every backend
 app.use(
@@ -28,7 +28,7 @@ app.use(cookieParser());
 
 // using the cors so that cors-policy http error can resolve
 const corsOptions = {
-  origin: "http://localhost:3000",
+  origin: ["https://twitter-2-y212.onrender.com"],
   credentials: true,
 };
 // now use the corsOptions and pass it as the argument
@@ -38,9 +38,9 @@ app.use("/api/v1/user", userRoute);
 app.use("/api/v1/tweet", tweetRoute);
 
 // use the path
-app.use(express.static(path.join(_dirname, "/frontend/build")));
+app.use(express.static(path.join(__dirname, "/frontend/build")));
 app.get("*", (_, res) => {
-  res.sendFile(path.resolve(_dirname, "frontend", "build", "index.html"));
+  res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"));
 });
 
 app.listen(process.env.PORT, () => {
