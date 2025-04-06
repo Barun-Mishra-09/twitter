@@ -1,7 +1,7 @@
 export const USER_API_END_POINT =
-  "http://localhost:8080/api/v1/user";
+  "https://twitter-api-ui.onrender.com";
 export const TWEET_API_END_POINT =
-  "http://localhost:8080/api/v1/user";
+  "https://twitter-api-ui.onrender.com";
 
 // for showing the exact timing of the tweet
 export const timeSince = (timestamp) => {
