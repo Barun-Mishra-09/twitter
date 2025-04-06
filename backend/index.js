@@ -28,7 +28,7 @@ app.use(cookieParser());
 
 // using the cors so that cors-policy http error can resolve
 const corsOptions = {
-  origin: ["https://twitter-2-y212.onrender.com"],
+  origin: ["https://twitter-7-vwhy.onrender.com"],
   credentials: true,
 };
 // now use the corsOptions and pass it as the argument
